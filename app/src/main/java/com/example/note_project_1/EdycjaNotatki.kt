@@ -2,6 +2,7 @@ package com.example.note_project_1
 
 import android.content.ContentValues
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.BaseColumns
@@ -9,8 +10,10 @@ import android.provider.ContactsContract
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBar
 import kotlinx.android.synthetic.main.activity_edycja_notatki.*
+import java.time.LocalDateTime
 
 class EdycjaNotatki : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,6 +73,7 @@ class EdycjaNotatki : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         //Sprawdzenie który przycisk w ActionBar został kliknięty
         if (item?.itemId == R.id.save_button)
@@ -79,7 +83,7 @@ class EdycjaNotatki : AppCompatActivity() {
             val db = dbHelper.writableDatabase
 
             val title = editText_EdycjaNotatki.text.toString()
-            val message = editText_EdycjaNotatki_message.text.toString()
+            var message = editText_EdycjaNotatki_message.text.toString()
 
             if(intent.hasExtra("ID_Notatki"))
             {
@@ -97,6 +101,8 @@ class EdycjaNotatki : AppCompatActivity() {
                 {
                     //Komunikacja z bazą danych
                     val value =  ContentValues()
+                    val current = LocalDateTime.now().toString()
+                    message += " || "+current
                     value.put(FeedEntry.COLUMN_NAME_TITLE, title)
                     value.put("message", message)
 
